@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     RAPIDAPI_KEY: process.env.RAPIDAPI_KEY,
   },
   images: {
-    domains: ['cricketchampion.co.in'],
+    domains: ['cricketchampion.co.in','ui-avatars.com'],
   },
 };
 

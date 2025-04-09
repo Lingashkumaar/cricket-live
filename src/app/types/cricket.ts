@@ -95,7 +95,7 @@ export interface Match {
           strike_rate: string;
           out_by?: string;
         }[];
-        bowler: {
+        bolwer: {
           name: string;
           over: string;
           maiden: number;
@@ -106,13 +106,21 @@ export interface Match {
       };
     };
     commentary?: {
-      [key: string]: {
-        over: string;
-        title: string;
-        description: string;
-        runs: string;
-        wicket?: string;
-      }[];
+      [inning: string]: {
+        [over: string]: Array<{
+          data: {
+            wicket: string;
+            overs: string;
+            runs: string;
+            wides: string;
+            title: string;
+            description: string;
+            noballs: string;
+            legbyes: string;
+            byes: string;
+          };
+        }>;
+      };
     };
     playing_xi?: {
       team_a: {

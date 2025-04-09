@@ -85,15 +85,17 @@ export const useMatchDetails = (matchId: number) => {
     const fetchMatch = async () => {
       setLoading(true);
       try {
-        const [basicInfo, scorecard, commentary] = await Promise.all([
+        const [basicInfo, scorecard, playingXI, commentary] = await Promise.all([
           api.getMatchDetails(matchId),
           api.getMatchScorecard(matchId),
+          api.getMatchPlayingXI(matchId),
           api.getMatchCommentary(matchId)
         ]);
         
         setMatch({
           ...basicInfo,
           scorecard: scorecard?.scorecard,
+          playing_xi:playingXI,
           commentary: commentary
         });
       } catch (error) {

@@ -41,6 +41,16 @@ export const getMatchCommentary = async (matchId: number) => {
   }
 };
 
+export const getMatchPlayingXI = async (matchId: number) => {
+  try {
+    const response = await api.get(`/match/${matchId}/playingXI`);
+    return response.data.data;
+  } catch (error) {
+    console.error('Error fetching match playingXI:', error);
+    return null;
+  }
+};
+
 export const getUpcomingMatches = async () => {
   try {
     const response = await api.get('/upcomingMatches');

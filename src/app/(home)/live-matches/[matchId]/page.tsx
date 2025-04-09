@@ -5,7 +5,6 @@ import { useMatchDetails } from '../../../hooks/useCricketApi';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { console } from 'inspector';
 
 interface MatchDetailsPageProps {
   params: Promise<{
@@ -41,7 +40,7 @@ const MatchDetailsPage: React.FC<MatchDetailsPageProps> = ({ params }) => {
                       ? 'Live'
                       : Number(match.match_status) === 1
                       ? 'Upcoming'
-                      : 'Commpleted'}
+                      : 'Completed'}
                 </span>
               </div>
 
@@ -176,7 +175,7 @@ const MatchDetailsPage: React.FC<MatchDetailsPageProps> = ({ params }) => {
                             </tr>
                           </thead>
                           <tbody className="bg-white divide-y divide-gray-200">
-                            {data.bowler.map((bowler, index) => (
+                            {data.bolwer?.map((bowler, index) => (
                               <tr key={index}>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{bowler.name}</td>
                                 <td className="px-4 py-2 whitespace-nowrap text-right text-sm text-gray-900">{bowler.over}</td>
@@ -262,7 +261,60 @@ const MatchDetailsPage: React.FC<MatchDetailsPageProps> = ({ params }) => {
               </div>
             )}
 
-            
+            {/* Match Commentary */}
+{typeof match.commentary === 'object' && match.commentary !== null && (
+  <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h2 className="text-xl font-bold mb-4">Match Commentary</h2>
+    
+    {Object.entries(match.commentary).map(([inning, overs]) => (
+      <div key={inning} className="mb-8">
+        <h3 className="text-lg font-semibold mb-3 border-b pb-2">{inning}</h3>
+        
+        {/* Get all overs in reverse order (latest first) */}
+        {Object.entries(overs)
+          .sort((a, b) => parseFloat(b[0].split(' ')[0]) - parseFloat(a[0].split(' ')[0]))
+          .map(([over, comments]) => (
+            <div key={over} className="mb-6">
+              <h4 className="font-medium text-gray-700 mb-2">{over}</h4>
+              
+              <div className="space-y-3 pl-4 border-l-2 border-gray-200">
+                {comments.map((comment, idx) => (
+                  <div key={`${over}-${idx}`} className="commentary-item">
+                    <div className="flex justify-between items-start">
+                      <span className="text-sm font-medium text-gray-500">
+                        {comment.data.overs}
+                      </span>
+                      {comment.data.runs !== '0' && comment.data.runs !== '' && (
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          comment.data.runs === 'wd' || comment.data.runs === 'nb' 
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : comment.data.wicket 
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-green-100 text-green-800'
+                        }`}>
+                          {comment.data.runs}
+                          {comment.data.wicket && 'W'}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <p className="font-medium mt-1">{comment.data.title}</p>
+                    <p className="text-sm text-gray-600 mt-1">{comment.data.description}</p>
+                    
+                    {comment.data.wicket && (
+                      <div className="mt-2 p-2 bg-red-50 rounded text-sm text-red-700">
+                        Wicket! {comment.data.wicket}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+      </div>
+    ))}
+  </div>
+)}
 
             {/* Match Info */}
             <div className="bg-white rounded-lg shadow-md p-6">
